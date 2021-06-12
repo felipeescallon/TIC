@@ -1,6 +1,5 @@
 """Reto #2"""
 import random
-import math
 
 # Credenciales del sistema
 g_username = "51612"
@@ -17,12 +16,6 @@ coordenadas = [
     [0.0, 0.0]
    # lati long
 ]
-
-# dic_coords = {
-#     "Trabajo": [[0.0], [0.0]],
-#     "Casa": [[0.0], [0.0]],
-#     "Parque": [[0.0], [0.0]]
-# }
 
 dic_coords = {
     "Trabajo": [0.0, 0.0],
@@ -107,14 +100,10 @@ def cambiar_passwd():
 
 
 def definir_coordenadas():
-    def restricciones(latitud, longitud):
-        # if latitud >= 6.284 and latitud <= 6.077:
-        if 6.284 >= latitud >= 6.077:   # 6.215
-            if -75.841 >= longitud >= -76.049:   # -75.984
-                return True
-            else:
-                print("\nError coordenada")
-                exit()
+    def restricciones(distancia, maximo, minimo):
+        # if distancia >= maximo and distancia <= minimo:
+        if maximo >= distancia >= minimo:
+            return True
         else:
             print("\nError coordenada")
             exit()
@@ -124,30 +113,30 @@ def definir_coordenadas():
     long_avg = 0
 
     for lugar in dic_coords:
-        # Se obtienen las coordenadas y se redondean a 3 valore decimales
+        # Se obtienen las coordenadas de la latitud y se redondean a 3 valores decimales
         dic_coords[lugar][0] = round(float(input(f"\nIngresa el valor decimal para latitud del {lugar} \n>> ")), 3)
-        dic_coords[lugar][1] = round(float(input(f"\nIngresa el valor decimal para longitud del {lugar} \n>> ")), 3)
 
-        # Valida los datos ingresados dentro de los rangos aceptados
-        if restricciones(latitud=dic_coords[lugar][0], longitud=dic_coords[lugar][1]):
-            # Acumulacion de coordenadas para generar un promedio estimado
-            lati_avg += dic_coords[lugar][0]
-            long_avg += dic_coords[lugar][1]
+        # if 6.284 >= dic_coords[lugar][0] >= 6.077:   # 6.215
+        if restricciones(distancia=dic_coords[lugar][0], maximo=6.284, minimo=6.077):
+            # Se obtienen las coordenadas de la longitud y se redondean a 3 valores decimales
+            dic_coords[lugar][1] = round(float(input(f"\nIngresa el valor decimal para longitud del {lugar} \n>> ")), 3)
+
+            # if -75.841 >= dic_coords[lugar][1] >= -76.049:   # -75.984
+            if restricciones(distancia=dic_coords[lugar][1], maximo=-75.841, minimo=-76.077):
+                # Acumulacion de coordenadas para generar un promedio estimado
+                lati_avg += dic_coords[lugar][0]
+                long_avg += dic_coords[lugar][1]
 
     # Calculo del promedio, dividiendo la sumatoria entre el total de datos dados
-    lati_avg = lati_avg / 3
-    long_avg = long_avg / 3
-
-    if not restricciones(latitud=lati_avg, longitud=long_avg):
-        print("\nError coordenada")
-        exit()
+    # lati_avg = lati_avg / 3
+    # long_avg = long_avg / 3
 
 
 # Funcion para elegir la opcion favorita del menu
 def elegir_favorito():
     """Recibe como argumentos la lista global de opciones y funciones,
     para seleccionar la favorita y ser movida a la primera posicion
-    :eturns -> bool"""
+    :returns -> bool"""
 
     def adivinanzas():
         """Funcion interna de adivinanzas para poder confirmar la seleccion de la opcion favorita"""

@@ -20,6 +20,19 @@ dic_coords = {
     "Parque": [1, 2]
 }
 
+
+# def restricciones(latitud, longitud):
+#     # if latitud >= 6.284 and latitud <= 6.077:
+#     if 6.284 >= latitud >= 6.077:  # 6.215
+#         if -75.841 >= longitud >= -76.049:  # -75.984
+#             return True
+#         else:
+#             print("\nError coordenada")
+#             exit()
+#     else:
+#         print("\nError coordenada")
+#         exit()
+
 # Taking multiples inputs in a single line
 # a, b = input("ingresa dos valores: \n>> ").split()
 #
