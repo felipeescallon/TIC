@@ -1,4 +1,4 @@
-"""Reto #2"""
+"""Reto #4"""
 import random
 
 # Credenciales del sistema
@@ -14,7 +14,7 @@ coordenadas = [
     [0.0, 0.0],
     # PARQUE
     [0.0, 0.0]
-   # lati long
+    # lat lon
 ]
 
 dic_coords = {
@@ -23,22 +23,38 @@ dic_coords = {
     "Parque": [0.0, 0.0]
              # lat  long
 }
+# Variable que inicializa el estado del contenido de las coordenadas de usuario como vacias ('True)
 coord_vacias = True
 
 
 # Funcion que representa el login del ususuario en el sistema
 def login():
     """Funcion que nos permite solicitar las credenciales del sistema"""
+
     def captcha(n1):
+        """Permite general un captcha de seguridad al usuario para autenticarse en el sistema
+
+        Args:
+            n1 (int): Representa los ultimos 3 digitos del numero del usuario
+
+        Returns:
+            [bool]: Estado de resultado de las operaciones resueltas por el usuario
+        """
         operaciones = [((2 + 4) / 6), (10 * 10 - 99), (2 ** 4 - (3 * 5)), (3 - 2)]
         operacion = int(input(f"\nIngrese la suma entre {n1} + {random.choice(operaciones)} \n>> "))
+
         if operacion == 613:
             return True
+
         else:
             return False
 
     def login_main():
-        """Retorna un valor 'bool' para determinar el flujo del programa"""
+        """Permite determinar el flujo del programa obteniendo las crecendiales del usuario para poder autenticarse en el sistema
+
+        Returns:
+            [bool]: Estado de resultado que determina el futuro flujo del programa
+        """
         print("Bienvenido al sistema de ubicación para zonas públicas WIFI")
 
         i_user = input("\nIngresa el numero de usuario: \n>> ")
@@ -101,26 +117,42 @@ def cambiar_passwd():
 
 
 def definir_coordenadas():
+    """Permite interactur con las coordenadas del usuario, tanto las puede llegar a mostrar como a cambiar, segun el flujo del programa y
+    las preferencias del usuario"""
+
     def restricciones(distancia, maximo, minimo):
+        """Permite evaluar la validez de las coordenadas ingresadas y que cumplan con restricciones dadas
+
+        Args:
+            distancia (float): Valor equivalente a la coordenada que se quiere evaluar
+            maximo (float): Valor maximo que puede alcanzar la coordenada ingresada
+            minimo (float): Valor minimo que puede alcanzar la coordenada ingresada
+
+        Returns:
+            [bool]: Retorna 'True' en caso de que las restricciones se cumplan y sean validas
+        """
         # if distancia >= maximo and distancia <= minimo:
         if maximo >= distancia >= minimo:
             return True
+
         else:
             print("\nError coordenada")
             exit()
 
     def crear_coordenadas():
+        """Permite crear y definir los diferentes valores de coordenadas correspondientes al usuario"""
         # Inicializacion de las variables para acumular el promedio de coordenadas
         lati_avg = 0
         long_avg = 0
 
+        # Se itera sobre el contenido del diccionario 'dic_coords' que equivale a las coordenadas del usuario
         for lugar in dic_coords:
-            # Se obtienen las coordenadas de la latitud y se redondean a 3 valores decimales
+            # Se obtienen las coordenadas de la latitud [0] y se redondean a 3 valores decimales
             dic_coords[lugar][0] = round(float(input(f"\nIngresa el valor decimal para latitud del {lugar} \n>> ")), 3)
 
             # if 6.284 >= dic_coords[lugar][0] >= 6.077:   # 6.215
             if restricciones(distancia=dic_coords[lugar][0], maximo=6.284, minimo=6.077):
-                # Se obtienen las coordenadas de la longitud y se redondean a 3 valores decimales
+                # Se obtienen las coordenadas de la longitud [1] y se redondean a 3 valores decimales
                 dic_coords[lugar][1] = round(
                     float(input(f"\nIngresa el valor decimal para longitud del {lugar} \n>> ")), 3)
 
@@ -130,9 +162,9 @@ def definir_coordenadas():
                     lati_avg += dic_coords[lugar][0]
                     long_avg += dic_coords[lugar][1]
 
-        # Definicion global de la variable, para poder ser usada desde afuera y ser cambiada desde el programa
+        # Estableciendo la variable como global, para poder ser accesible desde afuera y ser cambiada desde el programa
         global coord_vacias
-        # Cambiando la opcion de que las coordenadas ya no estan vacias
+        # Cambiando la opcion de que las coordenadas indicando que ya no estan vacias
         coord_vacias = False
 
         # Calculo del promedio, dividiendo la sumatoria entre el total de datos dados
@@ -140,16 +172,19 @@ def definir_coordenadas():
         # long_avg = long_avg / 3
 
     def mostrar_coordenadas():
+        """Permite mostrar las cooredenadas correspondientes al usuario en caso de que estas esten presentes"""
         count = 1
         for lugar in dic_coords:
             print(f"\nCoordenadas {lugar} [latitud, longitud] {count} : [{dic_coords[lugar][0]}, {dic_coords[lugar][0]}]")
 
     def cambiar_coordenadas():
+        """Permite cambiar las coordenadas de las diferentes que seleccione el usuario"""
         print("\nCoordenada 1 ubicada más al norte \nCoordenada 2 ubicada más al occidente")
 
         opcion = int(input("\nPresione 1,2 ó 3 para actualizar la respectiva coordenada."
                            " Presione 0 para regresar al menú"))
 
+        # Evalua la seleccion del usuario para procesar el cambio a realizar. y redondea el cambio a 3 decimales
         if opcion == 1:
             dic_coords["Trabajo"][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Trabajo \n>> ")), 3)
             dic_coords["Trabajo"][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Trabajo \n>> ")), 3)
@@ -178,12 +213,15 @@ def definir_coordenadas():
 
 # Funcion para elegir la opcion favorita del menu
 def elegir_favorito():
-    """Recibe como argumentos la lista global de opciones y funciones,
-    para seleccionar la favorita y ser movida a la primera posicion
-    :returns -> bool"""
+    """Permite elegir una opcin favorita y recibe como argumentos la lista global de opciones
+    y funciones, para seleccionar la favorita y ser movida a la primera posicion"""
 
     def adivinanzas():
-        """Funcion interna de adivinanzas para poder confirmar la seleccion de la opcion favorita"""
+        """Funcion interna de adivinanzas para poder confirmar la seleccion de la opcion favorita
+
+        Returns:
+            [bool]: estado de respuesta del usuario para la adivinanza
+        """
         print("\nConfirma tu seleccion:")
         n1 = int(input("\nque le falta al cero para ser mayor que nueve? \n>> "))
         n2 = int(input("\n'X' y 'X' son cuatro, y cuatro y 'X' son seis, cual es el valor de 'X? \n>> "))
@@ -193,12 +231,13 @@ def elegir_favorito():
         else:
             return False
 
-    # Se le resta una unidad para poder adaptarse a la posicion dle indice de lista
+    # Se le resta una unidad para poder adaptarse a la posicion del indice de lista
     seleccion = int(input("\nSeleccione opción favorita ")) - 1
 
     if seleccion > 4 or seleccion < 0:
         print("\nError")
         exit()
+
     else:
         if adivinanzas():
             opcion = lista_funciones[seleccion]
