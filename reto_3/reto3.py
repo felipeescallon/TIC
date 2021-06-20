@@ -1,4 +1,4 @@
-"""Reto #2"""
+"""Reto #3"""
 import random
 
 # Credenciales del sistema
@@ -147,8 +147,7 @@ def definir_coordenadas():
     def cambiar_coordenadas():
         print("\nCoordenada 1 ubicada más al norte \nCoordenada 2 ubicada más al occidente")
 
-        opcion = int(input("\nPresione 1,2 ó 3 para actualizar la respectiva coordenada."
-                           " Presione 0 para regresar al menú"))
+        opcion = int(input("\nPresione 1,2 ó 3 para actualizar la respectiva coordenada. Presione 0 para regresar al menú"))
 
         if opcion == 1:
             dic_coords["Trabajo"][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Trabajo \n>> ")), 3)

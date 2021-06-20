@@ -7,29 +7,39 @@ g_username = "51612"
 g_password = g_username[::-1]
 
 # Coordenadas de ubicacion del usuario, inicializadas en 0.0
-coordenadas = [
-    # TRABAJO
-    [0.0, 0.0],
-    # CASA
-    [0.0, 0.0],
-    # PARQUE
-    [0.0, 0.0]
-    # lat lon
-]
-
 dic_coords = {
     "Trabajo": [0.0, 0.0],
     "Casa": [0.0, 0.0],
     "Parque": [0.0, 0.0]
-             # lat  long
+    #          lat  long
 }
 # Variable que inicializa el estado del contenido de las coordenadas de usuario como vacias ('True)
 coord_vacias = True
 
+# Datos de la ubicaciones del usuario
+ubicacion_actual = {
+                #  lati    longi   prom
+    "Ubicacion1": [6.124, -75.946, 1035],
+    "Ubicacion2": [6.125, -75.966, 109],
+    "Ubicacion3": [6.135, -75.976, 31],
+    "Ubicacion4": [6.144, -75.936, 151]
+}
 
-# Funcion que representa el login del ususuario en el sistema
+
+def error(frase, salir=False):
+    """Permite generar un mensaje de error, y en caso de ser necesario salir del programa
+
+    Args:
+        frase ([str]): Mensaje de error correspondiente
+        salir (bool, optional): Indicador que determina si se finaliza el programa. Por defecto es 'False'
+    """
+    print(frase)
+    if salir:
+        exit()
+
+
 def login():
-    """Funcion que nos permite solicitar las credenciales del sistema"""
+    """Funcion que nos permite solicitar las credenciales del usuario en el sistema"""
 
     def captcha(n1):
         """Permite general un captcha de seguridad al usuario para autenticarse en el sistema
@@ -72,22 +82,18 @@ def login():
                     return True
 
                 else:
-                    print("\nError")
                     return False
 
             else:
-                print("\nError")
                 return False
 
         else:
-            print("\nError")
             return False
 
     # Retornando de la funcion 'login_main()'
     return login_main()
 
 
-# Funcion para cambiar la contraseña del usuario
 def cambiar_passwd():
     """Funcion que permite cambiar la contraseña del usuario actual si cumple con los parametros que se dictan"""
 
@@ -105,20 +111,18 @@ def cambiar_passwd():
 
         # La nueva contraseña no puede ser igual que la actual
         if es_igual(passwd=nueva):
-            print("\nError")
-            exit()
+            error(frase="\nError", salir=True)
 
         else:
             print(f"\nSe ha cambiado la contraseña para el usuario {g_username}")
 
     else:
-        print("\nError")
-        exit()
+        error(frase="\nError", salir=True)
 
 
 def definir_coordenadas():
-    """Permite interactur con las coordenadas del usuario, tanto las puede llegar a mostrar como a cambiar, segun el flujo del programa y
-    las preferencias del usuario"""
+    """Permite interactur con las coordenadas del usuario, tanto las puede llegar a mostrar como a cambiar, segun el
+    flujo del programa y las preferencias del usuario"""
 
     def restricciones(distancia, maximo, minimo):
         """Permite evaluar la validez de las coordenadas ingresadas y que cumplan con restricciones dadas
@@ -136,8 +140,28 @@ def definir_coordenadas():
             return True
 
         else:
-            print("\nError coordenada")
-            exit()
+            error(frase="\nError coordenada", salir=True)
+
+    # Lista con los lugares correspondientes a las coordenadas del usuario
+    lugares = [lugar for lugar in dic_coords]
+
+    def set_coords(lugar):
+        """Permite establecer las coordenadas del usuario, y a su vez evaluando su valides y restricciones correspondientes,
+        independiente si han sido creadas o no en el sistema
+
+        Args:
+            lugar (str): Corresponde al tipo de ubicacion al que corresponden las coordenadas que se definen
+        """
+        # Se obtiene el valor decimal de la LATITUD
+        dic_coords[lugar][0] = round(float(input(f"\nIngresa el valor decimal para latitud de {lugar} \n>> ")), 3)
+        # Evaluacion de las restricciones tanto de latitud como de longitud, con los valores especificados
+        # if latitud >= 6.284 and distancia <= 6.077
+        if restricciones(distancia=dic_coords[lugar][0], maximo=6.284, minimo=6.077): # LATITUD [0]
+            # Se obtiene el valor decimal de la LONGITUD
+            dic_coords[lugar][1] = round(float(input(f"\nIngresa el valor decimal para longitud de {lugar} \n>> ")), 3)
+            # if longitud >= -75.841 and longitud <= -76.077
+            restricciones(distancia=dic_coords[lugar][1], maximo=-75.841, minimo=-76.077) # LONGITUD [1]
+
 
     def crear_coordenadas():
         """Permite crear y definir los diferentes valores de coordenadas correspondientes al usuario"""
@@ -145,22 +169,26 @@ def definir_coordenadas():
         lati_avg = 0
         long_avg = 0
 
-        # Se itera sobre el contenido del diccionario 'dic_coords' que equivale a las coordenadas del usuario
-        for lugar in dic_coords:
-            # Se obtienen las coordenadas de la latitud [0] y se redondean a 3 valores decimales
-            dic_coords[lugar][0] = round(float(input(f"\nIngresa el valor decimal para latitud del {lugar} \n>> ")), 3)
+        # # Se itera sobre el contenido del diccionario 'dic_coords' que equivale a las coordenadas del usuario
+        # for lugar in dic_coords:
+        #     # Se obtienen las coordenadas de la latitud [0] y se redondean a 3 valores decimales
+        #     dic_coords[lugar][0] = round(float(input(f"\nIngresa el valor decimal para latitud del {lugar} \n>> ")), 3)
 
-            # if 6.284 >= dic_coords[lugar][0] >= 6.077:   # 6.215
-            if restricciones(distancia=dic_coords[lugar][0], maximo=6.284, minimo=6.077):
-                # Se obtienen las coordenadas de la longitud [1] y se redondean a 3 valores decimales
-                dic_coords[lugar][1] = round(
-                    float(input(f"\nIngresa el valor decimal para longitud del {lugar} \n>> ")), 3)
+        #     # if 6.284 >= dic_coords[lugar][0] >= 6.077:   # 6.215
+        #     if restricciones(distancia=dic_coords[lugar][0], maximo=6.284, minimo=6.077):
+        #         # Se obtienen las coordenadas de la longitud [1] y se redondean a 3 valores decimales
+        #         dic_coords[lugar][1] = round(float(input(f"\nIngresa el valor decimal para longitud del {lugar} \n>> ")), 3)
 
-                # if -75.841 >= dic_coords[lugar][1] >= -76.049:   # -75.984
-                if restricciones(distancia=dic_coords[lugar][1], maximo=-75.841, minimo=-76.077):
-                    # Acumulacion de coordenadas para generar un promedio estimado
-                    lati_avg += dic_coords[lugar][0]
-                    long_avg += dic_coords[lugar][1]
+        #         # if -75.841 >= dic_coords[lugar][1] >= -76.049:   # -75.984
+        #         if restricciones(distancia=dic_coords[lugar][1], maximo=-75.841, minimo=-76.077):
+        #             # Acumulacion de coordenadas para generar un promedio estimado
+        #             lati_avg += dic_coords[lugar][0]
+        #             long_avg += dic_coords[lugar][1]
+
+        set_coords(lugar=lugares[0])
+        set_coords(lugar=lugares[1])
+        set_coords(lugar=lugares[2])
+
 
         # Estableciendo la variable como global, para poder ser accesible desde afuera y ser cambiada desde el programa
         global coord_vacias
@@ -175,43 +203,84 @@ def definir_coordenadas():
         """Permite mostrar las cooredenadas correspondientes al usuario en caso de que estas esten presentes"""
         count = 1
         for lugar in dic_coords:
-            print(f"\nCoordenadas {lugar} [latitud, longitud] {count} : [{dic_coords[lugar][0]}, {dic_coords[lugar][0]}]")
+            print(f"Coordenadas {lugar} [latitud, longitud] {count} : [{dic_coords[lugar][0]}, {dic_coords[lugar][1]}]")
+            count += 1
 
     def cambiar_coordenadas():
         """Permite cambiar las coordenadas de las diferentes que seleccione el usuario"""
         print("\nCoordenada 1 ubicada más al norte \nCoordenada 2 ubicada más al occidente")
 
-        opcion = int(input("\nPresione 1,2 ó 3 para actualizar la respectiva coordenada."
-                           " Presione 0 para regresar al menú"))
+        opcion = int(input("\nPresione 1,2 ó 3 para actualizar la respectiva coordenada. Presione 0 para regresar al menú "))
 
-        # Evalua la seleccion del usuario para procesar el cambio a realizar. y redondea el cambio a 3 decimales
-        if opcion == 1:
-            dic_coords["Trabajo"][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Trabajo \n>> ")), 3)
-            dic_coords["Trabajo"][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Trabajo \n>> ")), 3)
+        # Evalua la seleccion del usuario para procesar el set_coords a realizar
+        if opcion == 0:
+            # Llamado de la funcion principal que representa el menu de opciones
+            main()
+
+        # Pasa la opcion del usuario como parametro de la funcion que actualiza el par de coordenadas correspondientes
+        elif opcion == 1:
+            set_coords(lugar=lugares[opcion -1])
+            # dic_coords["Trabajo"][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Trabajo \n>> ")), 3)
+            # dic_coords["Trabajo"][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Trabajo \n>> ")), 3)
 
         elif opcion == 2:
-            dic_coords['Casa'][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Casa \n>> ")), 3)
-            dic_coords['Casa'][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Casa \n>> ")), 3)
+            set_coords(lugar=lugares[opcion -1])
+            # dic_coords['Casa'][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Casa \n>> ")), 3)
+            # dic_coords['Casa'][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Casa \n>> ")), 3)
 
         elif opcion == 3:
-            dic_coords['Parque'][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Parque \n>> ")), 3)
-            dic_coords['Parque'][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Parque \n>> ")), 3)
+            set_coords(lugar=lugares[opcion -1])
+            # dic_coords['Parque'][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Parque \n>> ")), 3)
+            # dic_coords['Parque'][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Parque \n>> ")), 3)
 
         else:
-            print("\nError actualización")
-            exit()
+            error(frase="\nError actualización", salir=True)
 
     if coord_vacias:
-        print("estan vacias")
+        # print("estan vacias")
         crear_coordenadas()
 
     else:
-        print("estan llenas")
+        # print("estan llenas")
         mostrar_coordenadas()
         cambiar_coordenadas()
 
 
-# Funcion para elegir la opcion favorita del menu
+def ubicar_zona_wifi():
+
+    if coord_vacias:
+        error(frase="\nError sin registro de coordenadas", salir=True)
+
+    else:
+        count = 1
+        for lugar in dic_coords:
+            print(f"Coordenadas {lugar} [latitud, longitud] {count} : [{dic_coords[lugar][0]}, {dic_coords[lugar][1]}]")
+            count += 1
+
+        opcion = int(input("\nPor favor elija su ubicación actual(1,2 ó 3)para calcular ladistancia a los puntos de conexión"))
+
+        # TODO: realizar las acciones correspondientes de calculo de distancias
+        if opcion == 1:
+            pass
+
+        elif opcion == 2:
+            pass
+
+        elif opcion == 3:
+            pass
+
+        else:
+            error(frase="\nError ubicación", salir=True)
+
+
+def guardar_ubicacion():
+    pass
+
+
+def actualizar_zona_wifi():
+    pass
+
+
 def elegir_favorito():
     """Permite elegir una opcin favorita y recibe como argumentos la lista global de opciones
     y funciones, para seleccionar la favorita y ser movida a la primera posicion"""
@@ -228,6 +297,7 @@ def elegir_favorito():
 
         if (n1 + n2) == 3:
             return True
+
         else:
             return False
 
@@ -235,27 +305,22 @@ def elegir_favorito():
     seleccion = int(input("\nSeleccione opción favorita ")) - 1
 
     if seleccion > 4 or seleccion < 0:
-        print("\nError")
-        exit()
+        error(frase="\nError", salir=True)
 
     else:
         if adivinanzas():
             opcion = lista_funciones[seleccion]
             lista_funciones.pop(seleccion)
-
             lista_funciones.insert(0, opcion)
             print(f"\nHas elegido la opcion '{opcion[0]}' como tu favorita")
 
         else:
-            print("\nError")
-            exit()
+            error(frase="\nError", salir=True)
 
 
-# Funcion que permite cerrar sesion y finalizar con la ejecucion del programa
 def cerrar_sesion():
     """Funcion que permite salir del programa y terminar con la ejecucion del mismo"""
-    print("\nHasta pronto")
-    exit()
+    error(frase="\nHasta pronto", salir=True)
 
 
 # Lista con las opciones y sus correspondientes funciones (pasadas como objetos), que van a ser usadas en la ejecucion
@@ -263,9 +328,9 @@ def cerrar_sesion():
 lista_funciones = [
     ["Cambiar contraseña", cambiar_passwd],
     ["Igresar coordenadas actuales", definir_coordenadas],
-    ["Ubicar zona wifi más cercana", exit],
-    ["Guardar archivo con ubicación cercana", exit],
-    ["Actualizar registros de zonas wifi desde archivo", exit],
+    ["Ubicar zona wifi más cercana", ubicar_zona_wifi],
+    ["Guardar archivo con ubicación cercana", guardar_ubicacion],
+    ["Actualizar registros de zonas wifi desde archivo", actualizar_zona_wifi],
     ["Elegir opción de menú favorita", elegir_favorito],
     ["Cerrar sesión", cerrar_sesion]
 ]
@@ -288,7 +353,7 @@ def main():
         # Evalua la seleccion del usuario, y determina la opcion a ejecutar, la cual puede cambiar de posicion
         # Dependiendo si la escoge como favorita, y en cada posicion se ejecuta la que se solicita
         if opcion == 1:
-            print("\nUsted ha elegido la opción número 1")
+            print("\nUsted ha elegido la opción 1")
             lista_funciones[0][1]()
 
         elif opcion == 2:
@@ -314,7 +379,7 @@ def main():
             lista_funciones[6][1]()
 
         else:
-            print("\nError")
+            error(frase="\nError")
             errores += 1
 
             # Terminar la ejecucion del programa cuando se falla mas de 3 veces
@@ -329,5 +394,4 @@ if __name__ == '__main__':
         main()
 
     else:
-        print("\nError")
-        exit()
+        error(frase="\nError", salir=True)
