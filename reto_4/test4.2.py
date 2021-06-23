@@ -24,33 +24,14 @@ ubicacion_actual = [
     [6.124, -75.946, 1035]
 ]
 
-def funcion(seleccion):
 
-    def interna(dato):
-        # el parametro 'dato' equivale al indice de posicion de la lista de ubicaciones
-        # lugares = [elegido, comparado]
-        radio = 6372.795477598  # Km (Radio de la tierra)
+ubicacion_actual = [
+    [6.135, -75.976, 31,2],
+    [6.125, -75.966, 109, 3],
+    [6.144, -75.936, 151, 6],
+    [6.154, -75.946, 1035, 1]
+]
 
-        lat1, long1 = datos_dict[seleccion][0], datos_dict[seleccion][1]
-        lat2, long2 = ubicacion_actual[dato][0], ubicacion_actual[dato][1]
-
-        latitud = lat2 - lat1
-        longitud = long2 - long1
-
-        distancia = (2 * radio * asin(sqrt((sin(latitud / 2) ** 2) + cos(lat1) * cos(lat2) * (sin(longitud / 2) ** 2))))
-        distancia = round(distancia, 3)
-
-        return distancia
-
-    mayor = []
-
-    for i in range(4):
-        mayor.append(interna(i))
-
-    return sorted(mayor)
-
-
-
-
-print(funcion("Trabajo")[0])
-print(funcion("Trabajo")[1])
+# print(sorted(ubicacion_actual))
+for i in sorted(ubicacion_actual):
+    print(i)

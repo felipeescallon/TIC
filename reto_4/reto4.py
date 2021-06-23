@@ -14,8 +14,15 @@ dic_coords = {
     "Parque": [0.0, 0.0]
     #          lat  long
 }
+""" LA NUEVA """
+dic_coords = {
+    "Trabajo": [6.143, -75.978],
+    "Casa": [6.132, -75.968],
+    "Parque": [6.164, -75.936]
+    #          lat  long
+}
 # Variable que inicializa el estado del contenido de las coordenadas de usuario como vacias ('True)
-coord_vacias = True
+coord_vacias = False
 
 # Datos de la ubicaciones del usuario
 # ubicacion_actual = {
@@ -27,10 +34,10 @@ coord_vacias = True
 # }
 
 ubicacion_actual = [
-    [6.135, -75.976, 31],
-    [6.125, -75.966, 109],
-    [6.144, -75.936, 151],
-    [6.124, -75.946, 1035]
+    [0.0, 6.135, -75.976, 31],
+    [0.0, 6.125, -75.966, 109],
+    [0.0, 6.144, -75.936, 151],
+    [0.0, 6.124, -75.946, 1035]
 ]
 
 def error(frase, salir=False):
@@ -251,55 +258,6 @@ def definir_coordenadas():
 
 
 def ubicar_zona_wifi():
-    # def calcular_distancia(lugares):
-    #     """Distancia entre dos puntos
-
-    #     Recibe como parametro, una lista con los lugares que se va a operar. el primer lugar (lugares[0]), es el
-    #     lugar principal, y el resto de lugares, es con los que se va a efectuar el calculo de distancia
-
-    #     Args:
-    #         lugares (list): Lista de lugares con los que se va a operar
-
-    #     Returns:
-    #         (None): Respuesta por pantalla de la distancia obtenida
-    #     """
-    # # lista = [l1, l2, l3]
-    #     def interna(lugares):
-    #         """Calculo Interno
-
-    #         Permite calcular la distancia entre los puntos que se le pasan como parametro
-
-    #         Args:
-    #             lugares (list): Lista de dos elementos (lugares), el primero es el principal, y el segundo es con
-    #             el cual se va a operar
-
-    #         Returns:
-    #             [float]: Valor de la distancia entre los dos puntos que ha sido calculado
-    #         """
-    #         # lugares = [elegido, comparado]
-    #         radio = 6372.795477598  # Km (Radio de la tierra)
-
-    #         lat1, long1 = dic_coords[lugares[0]][0], dic_coords[lugares[0]][1]
-    #         lat2, long2 = dic_coords[lugares[1]][0], dic_coords[lugares[1]][1]
-
-    #         latitud = lat2 - lat1
-    #         longitud = long2 - long1
-
-    #         # Usando las funciones del modulo 'math' para calcular la distancia entre los 2 puntos que se indican
-    #         distancia = (2 * radio * asin(sqrt((sin(latitud / 2) ** 2) + cos(lat1) * cos(lat2) * (sin(longitud / 2) ** 2))))
-    #         distancia = round(distancia, 3)
-
-    #         return distancia
-    #     # Se muestra por pantalla el resultado correspondiente de las distancias
-    #     # print(f"\nLa zona wifi 1 {lugares[1]} ubicada en [{}]: {interna(lugares=[lugares[0], lugares[1]])} metros")
-    #     # print(f"la distancia es: {interna(lugares=[lugares[0], lugares[2]])} metros")
-
-    #     print("\nZonas wifi cercanas con menos usuarios")
-    #     for i in range(2):
-    #         print(f"La zona wifi {i + 1} {lugares[i + 1]}: ubicada en {dic_coords[lugares[i + 1]]}:"
-    #               f" a {interna(lugares=[lugares[0], lugares[i + 1]])} metros, tiene en promedio X usuarios")
-
-    #     respuesta = int(input("\nElija 1 o 2 para recibir indicaciones de llegada "))
 
     def calcular_distancia(seleccion):
         """Calculo de distancia entre dos puntos, y determina los dos puntos mas cercanos a la ubicacion del usuario
@@ -324,44 +282,38 @@ def ubicar_zona_wifi():
             # el parametro 'dato' equivale al indice de posicion de la lista de ubicaciones
             # lugares = [elegido, comparado]
             radio = 6372.795477598  # Km (Radio de la tierra)
-            # Valores a comparar escogidos por el usuario
+            # Valor a comparar escogido por el usuario (ubicacion actual)
             lat1, long1 = dic_coords[seleccion][0], dic_coords[seleccion][1]
-            # Valores de las zonas wifi cercanas
-            lat2, long2 = ubicacion_actual[dato][0], ubicacion_actual[dato][1]
+            # Valores de las zonas wifi cercanas, correspondiente al indice en la lista
+            lat2, long2 = ubicacion_actual[dato][1], ubicacion_actual[dato][2]
 
             latitud = lat2 - lat1
             longitud = long2 - long1
 
             # Usando las funciones del modulo 'math' para calcular la distancia entre los 2 puntos que se indican
             distancia = (2 * radio * asin(sqrt((sin(latitud / 2) ** 2) + cos(lat1) * cos(lat2) * (sin(longitud / 2) ** 2))))
-            distancia = round(distancia, 3)
+            distancia = round(distancia, 2)
 
             return distancia
 
-        # Creacion de una lista vacia para almacenar los multiples calculos de distancias que se generan
-        mayor = []
-
+        # Se actualiza el valor de la distancia entre la zona WIFI y la ubicacion escogida por el usuario
         for i in range(4):
-            mayor.append(interna(i))
+            # Se asigna en la posicion de lista correspondiente al valor de ubicacion
+            ubicacion_actual[i][0] = interna(i)
 
-        # Se retorna la lista de distancias de menor a mayor
-        # return sorted(mayor)
         print("\nZonas wifi cercanas con menos usuarios")
 
-        """
-        TODO: Terminar la organizacion de los datos y como se muestran al usuario
-
-            - Ordenar los datos en un tipo de diccionario, para que sea mas facil su acceso
-
-            - Mejorar la vista que se le presenta al usuario
-
-            - Terminar la implementacion de la funcion para reducir codigo
-        """
-        # for i in range(2):
-        #     print(f"La zona wifi {i + 1}: ubicada en [{ubicacion_actual[i][0]}, {ubicacion_actual[i][1]}]:"
-        #           f" a {} metros, tiene en promedio X usuarios")
+        count = 1
+        # Se itera sobre las zonas wifi ordenadas de menor a mayor distancia
+        for data in sorted(ubicacion_actual):
+            print(f"La zona wifi {count}: ubicada en [{data[1]}, {data[2]}]: a {data[0]} metros, tiene en promedio {data[3]} usuarios")
+            count += 1
+            # Se termina con el ciclo limitando la salida a dos zonas WIFI unicamente
+            if count > 2:
+                break
 
         respuesta = int(input("\nElija 1 o 2 para recibir indicaciones de llegada "))
+        print(f"Su respuesta fue {respuesta}")
 
 
     if coord_vacias:
@@ -369,9 +321,9 @@ def ubicar_zona_wifi():
 
     else:
         # Se listan las coordenadas actuales asociadas al usuario, iterando sobre ellas
-        count = 1+x`
+        count = 1
         for lugar in dic_coords:
-            print(f"Coordenadas {lugar} [latitud, longitud] {count} : [{dic_coords[lugar][0]}, {dic_coords[lugar][1]}]")
+            print(f"Coordenadas [latitud, longitud] {lugar} {count} : [{dic_coords[lugar][0]}, {dic_coords[lugar][1]}]")
             count += 1
 
         opcion = int(
@@ -507,7 +459,8 @@ def main():
 
 if __name__ == '__main__':
     # Se evaluan los datos de ingreso preesablecidos, para poder ingresar
-    if login():
+    if True:
+    # if login():
         # Llamado de la funcion principal
         main()
 
