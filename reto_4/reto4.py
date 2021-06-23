@@ -24,16 +24,8 @@ dic_coords = {
 # Variable que inicializa el estado del contenido de las coordenadas de usuario como vacias ('True)
 coord_vacias = False
 
-# Datos de la ubicaciones del usuario
-# ubicacion_actual = {
-#     #  lati    longi   prom
-#     "Ubicacion1": [6.124, -75.946, 1035],
-#     "Ubicacion2": [6.125, -75.966, 109],
-#     "Ubicacion3": [6.135, -75.976, 31],
-#     "Ubicacion4": [6.144, -75.936, 151]
-# }
-
-ubicacion_actual = [
+# Datos de la ubicaciones de zonas WIFI
+ubicaciones_wifi = [
     [0.0, 6.135, -75.976, 31],
     [0.0, 6.125, -75.966, 109],
     [0.0, 6.144, -75.936, 151],
@@ -142,7 +134,7 @@ def definir_coordenadas():
         """Permite evaluar la validez de las coordenadas ingresadas y que cumplan con restricciones dadas
 
         Args:
-            distancia (float): Valor equivalente a la coordenada que se quiere evaluar
+            distancia (float): Valor equivalente a la coordenada que se quiere evaluar (latitud - longitud)
             maximo (float): Valor maximo que puede alcanzar la coordenada ingresada
             minimo (float): Valor minimo que puede alcanzar la coordenada ingresada
 
@@ -159,22 +151,28 @@ def definir_coordenadas():
     # Lista con los lugares correspondientes a las coordenadas del usuario
     lugares = [lugar for lugar in dic_coords]
 
-    def set_coords(lugar):
+#
+#
+# SE ESTA CAMBIANDO PARA QUE RECIBA UNICAMENTE UN UN NUMERO, Y NO UNA PALABRA
+    def set_coords(seleccion):
         """Permite establecer las coordenadas del usuario, y a su vez evaluando su valides y restricciones correspondientes,
         independiente si han sido creadas o no en el sistema
 
         Args:
             lugar (str): Corresponde al tipo de ubicacion al que corresponden las coordenadas que se definen
         """
+        # Lista con los lugares correspondientes a las coordenadas del usuario
+        lugares = [lugar for lugar in dic_coords]
+
         # Se obtiene el valor decimal de la LATITUD
-        dic_coords[lugar][0] = round(float(input(f"\nIngresa el valor decimal para latitud de {lugar} \n>> ")), 3)
+        dic_coords[lugares[seleccion]][0] = round(float(input(f"\nIngresa el valor decimal para latitud de {[lugares[seleccion]]} \n>> ")), 3)
         # Evaluacion de las restricciones tanto de latitud como de longitud, con los valores especificados
         # if latitud >= 6.284 and distancia <= 6.077
-        if restricciones(distancia=dic_coords[lugar][0], maximo=6.284, minimo=6.077):  # LATITUD [0]
+        if restricciones(distancia=dic_coords[lugares[seleccion]][0], maximo=6.284, minimo=6.077):  # LATITUD [0]
             # Se obtiene el valor decimal de la LONGITUD
-            dic_coords[lugar][1] = round(float(input(f"\nIngresa el valor decimal para longitud de {lugar} \n>> ")), 3)
+            dic_coords[lugares[seleccion]][1] = round(float(input(f"\nIngresa el valor decimal para longitud de {lugares[seleccion]} \n>> ")), 3)
             # if longitud >= -75.841 and longitud <= -76.077
-            restricciones(distancia=dic_coords[lugar][1], maximo=-75.841, minimo=-76.077)  # LONGITUD [1]
+            restricciones(distancia=dic_coords[lugares[seleccion]][1], maximo=-75.841, minimo=-76.077)  # LONGITUD [1]
 
     def crear_coordenadas():
         """Permite crear y definir los diferentes valores de coordenadas correspondientes al usuario"""
@@ -198,10 +196,13 @@ def definir_coordenadas():
         #             lati_avg += dic_coords[lugar][0]
         #             long_avg += dic_coords[lugar][1]
 
-        set_coords(lugar=lugares[0])
-        set_coords(lugar=lugares[1])
-        set_coords(lugar=lugares[2])
+        # set_coords(seleccion=lugares[0])
+        # set_coords(seleccion=lugares[1])
+        # set_coords(seleccion=lugares[2])
 
+        set_coords(seleccion=0)
+        set_coords(seleccion=1)
+        set_coords(seleccion=2)
         # Estableciendo la variable como global, para poder ser accesible desde afuera y ser cambiada desde el programa
         global coord_vacias
         # Cambiando la opcion de que las coordenadas indicando que ya no estan vacias
@@ -232,17 +233,17 @@ def definir_coordenadas():
 
         # Pasa la opcion del usuario como parametro de la funcion que actualiza el par de coordenadas correspondientes
         elif opcion == 1:
-            set_coords(lugar=lugares[opcion - 1])
+            set_coords(seleccion=opcion - 1)
             # dic_coords["Trabajo"][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Trabajo \n>> ")), 3)
             # dic_coords["Trabajo"][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Trabajo \n>> ")), 3)
 
         elif opcion == 2:
-            set_coords(lugar=lugares[opcion - 1])
+            set_coords(seleccion=opcion - 1)
             # dic_coords['Casa'][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Casa \n>> ")), 3)
             # dic_coords['Casa'][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Casa \n>> ")), 3)
 
         elif opcion == 3:
-            set_coords(lugar=lugares[opcion - 1])
+            set_coords(seleccion=opcion - 1)
             # dic_coords['Parque'][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Parque \n>> ")), 3)
             # dic_coords['Parque'][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Parque \n>> ")), 3)
 
@@ -285,7 +286,7 @@ def ubicar_zona_wifi():
             # Valor a comparar escogido por el usuario (ubicacion actual)
             lat1, long1 = dic_coords[seleccion][0], dic_coords[seleccion][1]
             # Valores de las zonas wifi cercanas, correspondiente al indice en la lista
-            lat2, long2 = ubicacion_actual[dato][1], ubicacion_actual[dato][2]
+            lat2, long2 = ubicaciones_wifi[dato][1], ubicaciones_wifi[dato][2]
 
             latitud = lat2 - lat1
             longitud = long2 - long1
@@ -298,14 +299,14 @@ def ubicar_zona_wifi():
 
         # Se actualiza el valor de la distancia entre la zona WIFI y la ubicacion escogida por el usuario
         for i in range(4):
-            # Se asigna en la posicion de lista correspondiente al valor de ubicacion
-            ubicacion_actual[i][0] = interna(i)
+            # Se asigna en la posicion de lista correspondiente al valor de la distancia entre puntos [0]
+            ubicaciones_wifi[i][0] = interna(i)
 
         print("\nZonas wifi cercanas con menos usuarios")
 
         count = 1
         # Se itera sobre las zonas wifi ordenadas de menor a mayor distancia
-        for data in sorted(ubicacion_actual):
+        for data in sorted(ubicaciones_wifi):
             print(f"La zona wifi {count}: ubicada en [{data[1]}, {data[2]}]: a {data[0]} metros, tiene en promedio {data[3]} usuarios")
             count += 1
             # Se termina con el ciclo limitando la salida a dos zonas WIFI unicamente
