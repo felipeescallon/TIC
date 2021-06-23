@@ -369,7 +369,7 @@ def ubicar_zona_wifi():
 
     else:
         # Se listan las coordenadas actuales asociadas al usuario, iterando sobre ellas
-        count = 1
+        count = 1+x`
         for lugar in dic_coords:
             print(f"Coordenadas {lugar} [latitud, longitud] {count} : [{dic_coords[lugar][0]}, {dic_coords[lugar][1]}]")
             count += 1
