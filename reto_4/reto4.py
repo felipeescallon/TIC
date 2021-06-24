@@ -14,15 +14,8 @@ dic_coords = {
     "Parque": [0.0, 0.0]
     #          lat  long
 }
-""" LA NUEVA """
-dic_coords = {
-    "Trabajo": [6.143, -75.978],
-    "Casa": [6.132, -75.968],
-    "Parque": [6.164, -75.936]
-    #          lat  long
-}
 # Variable que inicializa el estado del contenido de las coordenadas de usuario como vacias ('True)
-coord_vacias = False
+coord_vacias = True
 
 # Datos de la ubicaciones de zonas WIFI
 ubicaciones_wifi = [
@@ -36,9 +29,10 @@ def error(frase, salir=False):
     """Permite generar un mensaje de error, y en caso de ser necesario salir del programa
 
     Args:
-        frase ([str]): Mensaje de error correspondiente
+        frase (str): Mensaje de error correspondiente
         salir (bool, optional): Indicador que determina si se finaliza el programa. Por defecto es 'False'
     """
+
     print(frase)
     if salir:
         exit()
@@ -71,6 +65,7 @@ def login():
         Returns:
             [bool]: Estado de resultado que determina el futuro flujo del programa
         """
+
         print("Bienvenido al sistema de ubicación para zonas públicas WIFI")
 
         i_user = input("\nIngresa el numero de usuario: \n>> ")
@@ -106,6 +101,7 @@ def cambiar_passwd():
     def es_igual(passwd):
         """Compara la contraseña ingresada con la que ya existe
         en el sistema, y retorna 'True' en caso de serlo"""
+
         if passwd == g_password:
             return True
 
@@ -134,13 +130,14 @@ def definir_coordenadas():
         """Permite evaluar la validez de las coordenadas ingresadas y que cumplan con restricciones dadas
 
         Args:
-            distancia (float): Valor equivalente a la coordenada que se quiere evaluar (latitud - longitud)
+            distancia (float): Valor equivalente a la coordenada que se quiere evaluar (latitud || longitud)
             maximo (float): Valor maximo que puede alcanzar la coordenada ingresada
             minimo (float): Valor minimo que puede alcanzar la coordenada ingresada
 
         Returns:
             [bool]: Retorna 'True' en caso de que las restricciones se cumplan y sean validas
         """
+
         # if distancia >= maximo and distancia <= minimo:
         if maximo >= distancia >= minimo:
             return True
@@ -148,12 +145,6 @@ def definir_coordenadas():
         else:
             error(frase="\nError coordenada", salir=True)
 
-    # Lista con los lugares correspondientes a las coordenadas del usuario
-    lugares = [lugar for lugar in dic_coords]
-
-#
-#
-# SE ESTA CAMBIANDO PARA QUE RECIBA UNICAMENTE UN UN NUMERO, Y NO UNA PALABRA
     def set_coords(seleccion):
         """Permite establecer las coordenadas del usuario, y a su vez evaluando su valides y restricciones correspondientes,
         independiente si han sido creadas o no en el sistema
@@ -161,11 +152,13 @@ def definir_coordenadas():
         Args:
             lugar (str): Corresponde al tipo de ubicacion al que corresponden las coordenadas que se definen
         """
+
         # Lista con los lugares correspondientes a las coordenadas del usuario
         lugares = [lugar for lugar in dic_coords]
+        # lugares = ['Trabajo', 'Casa', 'Parque']
 
         # Se obtiene el valor decimal de la LATITUD
-        dic_coords[lugares[seleccion]][0] = round(float(input(f"\nIngresa el valor decimal para latitud de {[lugares[seleccion]]} \n>> ")), 3)
+        dic_coords[lugares[seleccion]][0] = round(float(input(f"\nIngresa el valor decimal para latitud de {lugares[seleccion]} \n>> ")), 3)
         # Evaluacion de las restricciones tanto de latitud como de longitud, con los valores especificados
         # if latitud >= 6.284 and distancia <= 6.077
         if restricciones(distancia=dic_coords[lugares[seleccion]][0], maximo=6.284, minimo=6.077):  # LATITUD [0]
@@ -176,30 +169,8 @@ def definir_coordenadas():
 
     def crear_coordenadas():
         """Permite crear y definir los diferentes valores de coordenadas correspondientes al usuario"""
-        # Inicializacion de las variables para acumular el promedio de coordenadas
-        lati_avg = 0
-        long_avg = 0
 
-        # # Se itera sobre el contenido del diccionario 'dic_coords' que equivale a las coordenadas del usuario
-        # for lugar in dic_coords:
-        #     # Se obtienen las coordenadas de la latitud [0] y se redondean a 3 valores decimales
-        #     dic_coords[lugar][0] = round(float(input(f"\nIngresa el valor decimal para latitud del {lugar} \n>> ")), 3)
-
-        #     # if 6.284 >= dic_coords[lugar][0] >= 6.077:   # 6.215
-        #     if restricciones(distancia=dic_coords[lugar][0], maximo=6.284, minimo=6.077):
-        #         # Se obtienen las coordenadas de la longitud [1] y se redondean a 3 valores decimales
-        #         dic_coords[lugar][1] = round(float(input(f"\nIngresa el valor decimal para longitud del {lugar} \n>> ")), 3)
-
-        #         # if -75.841 >= dic_coords[lugar][1] >= -76.049:   # -75.984
-        #         if restricciones(distancia=dic_coords[lugar][1], maximo=-75.841, minimo=-76.077):
-        #             # Acumulacion de coordenadas para generar un promedio estimado
-        #             lati_avg += dic_coords[lugar][0]
-        #             long_avg += dic_coords[lugar][1]
-
-        # set_coords(seleccion=lugares[0])
-        # set_coords(seleccion=lugares[1])
-        # set_coords(seleccion=lugares[2])
-
+        # Se pasa como argumento el indice correspondiente al lugar del usuario (Trabajo, Casa, Parque)
         set_coords(seleccion=0)
         set_coords(seleccion=1)
         set_coords(seleccion=2)
@@ -208,12 +179,9 @@ def definir_coordenadas():
         # Cambiando la opcion de que las coordenadas indicando que ya no estan vacias
         coord_vacias = False
 
-        # Calculo del promedio, dividiendo la sumatoria entre el total de datos dados
-        # lati_avg = lati_avg / 3
-        # long_avg = long_avg / 3
-
     def mostrar_coordenadas():
         """Permite mostrar las cooredenadas correspondientes al usuario en caso de que estas esten presentes"""
+
         count = 1
         for lugar in dic_coords:
             print(f"Coordenadas {lugar} [latitud, longitud] {count} : [{dic_coords[lugar][0]}, {dic_coords[lugar][1]}]")
@@ -221,6 +189,7 @@ def definir_coordenadas():
 
     def cambiar_coordenadas():
         """Permite cambiar las coordenadas de las diferentes que seleccione el usuario"""
+
         print("\nCoordenada 1 ubicada más al norte \nCoordenada 2 ubicada más al occidente")
 
         opcion = int(
@@ -233,19 +202,13 @@ def definir_coordenadas():
 
         # Pasa la opcion del usuario como parametro de la funcion que actualiza el par de coordenadas correspondientes
         elif opcion == 1:
-            set_coords(seleccion=opcion - 1)
-            # dic_coords["Trabajo"][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Trabajo \n>> ")), 3)
-            # dic_coords["Trabajo"][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Trabajo \n>> ")), 3)
+            set_coords(seleccion=(opcion - 1))
 
         elif opcion == 2:
-            set_coords(seleccion=opcion - 1)
-            # dic_coords['Casa'][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Casa \n>> ")), 3)
-            # dic_coords['Casa'][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Casa \n>> ")), 3)
+            set_coords(seleccion=(opcion - 1))
 
         elif opcion == 3:
-            set_coords(seleccion=opcion - 1)
-            # dic_coords['Parque'][0] = round(float(input(f"\nIngresa el valor decimal para latitud de Parque \n>> ")), 3)
-            # dic_coords['Parque'][1] = round(float(input(f"\nIngresa el valor decimal para longitud de Parque \n>> ")), 3)
+            set_coords(seleccion=(opcion - 1))
 
         else:
             error(frase="\nError actualización", salir=True)
@@ -259,9 +222,13 @@ def definir_coordenadas():
 
 
 def ubicar_zona_wifi():
+    """Permite ubicar la zona WIFI mas cercana al usuario, mostrandole las diferentes opciones y datos relacionados 
+    con las mismas, como las coordenadas de ubicacion y la distancia entre las mismas
+    """
 
     def calcular_distancia(seleccion):
         """Calculo de distancia entre dos puntos, y determina los dos puntos mas cercanos a la ubicacion del usuario
+        Recibe como parametro el lugar de ubicacion actual del usuario (str) para ser operado en el calculo
 
         Args:
             seleccion (str): Seleccion del usuario correspondiente a la ubicacion actual, para realizar el calculo
@@ -280,8 +247,8 @@ def ubicar_zona_wifi():
             Returns:
                 (float): Distancia que hay entre los dos puntos que se comparan [ubicacion actual, zona wifi]
             """
+
             # el parametro 'dato' equivale al indice de posicion de la lista de ubicaciones
-            # lugares = [elegido, comparado]
             radio = 6372.795477598  # Km (Radio de la tierra)
             # Valor a comparar escogido por el usuario (ubicacion actual)
             lat1, long1 = dic_coords[seleccion][0], dic_coords[seleccion][1]
@@ -297,10 +264,32 @@ def ubicar_zona_wifi():
 
             return distancia
 
+        def calc_tiempo(distancia):
+            """Calcula el tiempo promedio desde la ubicacion del usuario hasta el punto WIFI seleccionado
+
+            Args:
+                distancia (float): Distancia en metros entre la ubicacion del usuario y la zona WIFI
+            """
+            # Velocidad promedio de BUS
+            vel_bus = 16.67 - 0.483
+            # Velocidad promedio de AUTO
+            vel_auto = 20.83
+            # Calculo del tiempo promedio
+            tiempo_bus = distancia / vel_bus
+            tiempo_auto = distancia / vel_auto
+
+            print(f"\nEl tiempo promedio en AUTO es de {round(tiempo_auto, 2)}")
+            print(f"El tiempo promedio en BUS es de {round(tiempo_bus, 2)}")
+
+            salir = int(input("\nIngrese 0 para salir "))
+
+            if salir == 0:
+                main()
+
         # Se actualiza el valor de la distancia entre la zona WIFI y la ubicacion escogida por el usuario
-        for i in range(4):
+        for lugar in range(4):
             # Se asigna en la posicion de lista correspondiente al valor de la distancia entre puntos [0]
-            ubicaciones_wifi[i][0] = interna(i)
+            ubicaciones_wifi[lugar][0] = interna(lugar)
 
         print("\nZonas wifi cercanas con menos usuarios")
 
@@ -316,7 +305,16 @@ def ubicar_zona_wifi():
         respuesta = int(input("\nElija 1 o 2 para recibir indicaciones de llegada "))
         print(f"Su respuesta fue {respuesta}")
 
+        if respuesta == 1:
+            calc_tiempo(distancia=ubicaciones_wifi[0][0])
 
+        elif respuesta == 2:
+            calc_tiempo(distancia=ubicaciones_wifi[1][0])
+
+        else:
+            error(frase="\nError zona wifi", salir=True)
+
+    # Se comprueba si las coordenadas del usuario estan dadas
     if coord_vacias:
         error(frase="\nError sin registro de coordenadas", salir=True)
 
@@ -324,11 +322,10 @@ def ubicar_zona_wifi():
         # Se listan las coordenadas actuales asociadas al usuario, iterando sobre ellas
         count = 1
         for lugar in dic_coords:
-            print(f"Coordenadas [latitud, longitud] {lugar} {count} : [{dic_coords[lugar][0]}, {dic_coords[lugar][1]}]")
+            print(f"Coordenadas {count} [latitud, longitud] {lugar} : [{dic_coords[lugar][0]}, {dic_coords[lugar][1]}]")
             count += 1
 
-        opcion = int(
-            input("\nPor favor elija su ubicación actual (1,2 ó 3) para calcular la distancia a los puntos de conexión "))
+        opcion = int(input("\nPor favor elija su ubicación actual (1,2 ó 3) para calcular la distancia a los puntos de conexión "))
 
         # Se pasan los diferentes lugares, en funcion de la seleccion del usuario, para ser calculadas sus distancias
         if opcion == 1:
@@ -362,6 +359,7 @@ def elegir_favorito():
         Returns:
             [bool]: estado de respuesta del usuario para la adivinanza
         """
+
         print("\nConfirma tu seleccion:")
         n1 = int(input("\nque le falta al cero para ser mayor que nueve? \n>> "))
         n2 = int(input("\n'X' y 'X' son cuatro, y cuatro y 'X' son seis, cual es el valor de 'X? \n>> "))
@@ -391,6 +389,7 @@ def elegir_favorito():
 
 def cerrar_sesion():
     """Funcion que permite salir del programa y terminar con la ejecucion del mismo"""
+
     error(frase="\nHasta pronto", salir=True)
 
 
@@ -410,6 +409,7 @@ lista_funciones = [
 # Funcion principal del programa
 def main():
     """Funcion principal del programa que determina el flujo y las acciones a relaizar"""
+
     # Variable de contador, que nos permite acumular los fallos de seleccion del usuario (fuera del 'while')
     errores = 0
     while True:
@@ -460,8 +460,7 @@ def main():
 
 if __name__ == '__main__':
     # Se evaluan los datos de ingreso preesablecidos, para poder ingresar
-    if True:
-    # if login():
+    if login():
         # Llamado de la funcion principal
         main()
 
