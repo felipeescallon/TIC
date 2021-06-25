@@ -91,7 +91,7 @@ def login():
         else:
             return False
 
-    # Retornando de la funcion 'login_main()'
+    # Retornando de la funcion 'login_main()' para ser usada
     return login_main()
 
 
