@@ -1,4 +1,4 @@
-"""Reto #2 menu de opciones"""
+"""Reto #2"""
 import random
 
 # Credenciales del sistema

@@ -1,3 +1,4 @@
+"""Reto #1"""
 import random
 
 # Credeciales del sistema
